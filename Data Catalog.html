@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<!--[if IE 9 ]>                <html lang="en" class="no-js ie9"> <![endif]-->
+<html lang="en"><!-- InstanceBegin template="/Templates/geolib.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<!-- Maine.gov | State Agency Template 3.0 -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Data Catalog</title>
+<!-- InstanceEndEditable -->
+<link media="screen" type="text/css" rel="stylesheet" href="css/index.css" />
+<link media="print" type="text/css" rel="stylesheet" href="css/print.css" />
+<link media="only screen and (max-width: 651px)" type="text/css" rel="stylesheet" href="css/sphone.css" />
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0" />
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/jquery.min.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/maine.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/jquery.hoverIntent.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/superfish.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/jquery.smartmenus.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/jquery.smartmenus.keyboard.js"></script>
+<script type="text/javascript" src="https://www1.maine.gov/awt/templateV3/js/agencyv3.js"></script>
+<!-- InstanceBeginEditable name="head" -->
+<meta name="description" content=" " />
+<meta name="keywords" content=" " />
+<!-- Custom code area (Start) -->
+<!--<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+var xhttp = new XMLHttpRequest();
+var statCode=0;  //Initial request status code.  Quit process when it's 200
+var totalIterations = 0; //Total num of tries. After x number, quit to avoid runaway loop.
+var downloadReady=false;
+ 
+function getzipfile(shapeUrl,linkid){
+	document.getElementById(linkid).disabled=true;
+	xhttp.open("GET", shapeUrl, true);
+	xhttp.send();
+	document.getElementById(linkid).ondblclick=null;
+
+	document.getElementById("loader").style.display = "block";
+	myInterval=setInterval(checkStatus,3000,shapeUrl,linkid);
+	document.getElementById("loader").style.display = "none";	
+	
+	if(downloadReady){
+		//location.href=shapeUrl;	
+		document.getElementById(linkid).disabled=false;		
+	}
+
+}
+
+function getkmzfile(kmzUrl,linkid){
+	xhttp.open("GET", kmzUrl, true);
+	xhttp.send();
+	document.getElementById(linkid).ondblclick=null;
+	//document.getElementById(linkid).onclick=null;
+	document.getElementById(linkid).disabled=true;
+	document.getElementById("loader").style.display = "block";
+	myInterval=setInterval(checkStatus,3000,kmzUrl,linkid);
+	document.getElementById("loader").style.display = "none";	
+	//document.getElementById(linkid).disabled=false;		
+	if(downloadReady){
+		location.href=kmzUrl;	
+	}
+	
+}
+  
+function checkStatus(shapeUrl,linkid){
+	//alert("test");
+	totalIterations++
+	document.getElementById("loader").style.display = "block";
+	console.log(xhttp.status);
+	console.log(xhttp.readyState);
+	document.getElementById(linkid).disabled=true;
+	if(xhttp.status==200 && xhttp.readyState==4){
+		downloadReady==true;
+		
+		clearInterval(myInterval);
+		totalIterations=0;
+		document.getElementById("loader").style.display = "none";
+		location.href=shapeUrl;	
+		document.getElementById(linkid).disabled=false;
+
+	}
+	if(totalIterations > 20){
+		console.log("status="+xhttp.status);
+		if(xhttp.status==200){
+			downloadReady==true;
+			clearInterval(myInterval);
+			//totalIterations=0;			
+			document.getElementById("loader").style.display = "none";
+			location.href=shapeUrl;	
+		}
+		//clearInterval(myInterval);
+		console.log("timed out");
+		document.getElementById("loader").style.display = "none";
+			if(xhttp.status!=200){
+			if(xhttp.status > 200 && !downloadReady){
+				alert("Download request processed, but timed out.  Please try again.");
+			}
+			else if(xhttp.status >= 500){
+				alert("The server encountered an unexpected condition which prevented it from fulfilling the request.");
+			}
+			else{
+				console.log("Error processing your request.  Error code:" + xhttp.status);
+			}
+			clearInterval(myInterval);
+			document.getElementById(linkid).disabled=false;
+		}
+	}
+
+}
+  
+
+  
+function checkData(shapeUrl)
+{
+	console.log(xhttp.status);	
+}
+
+function disableMe(){
+	document.getElementsByClassName("shpImg").onclick = null;
+} 				
+  </script>
+<!-- Custom code area (End) -->
+<style type="text/css">
+#maincontent2sm p {
+	font-size: 10px;
+}
+.maincontent2sm p {
+	font-size: 10px;
+}
+.maincontent2sm {
+	font-size: small;
+}
+
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  position: fixed;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+</style>
+<!-- InstanceEndEditable -->
+<!-- InstanceParam name="crumbtrail" type="boolean" value="false" -->
+<!-- InstanceParam name="rightcol" type="boolean" value="false" -->
+<!-- InstanceParam name="leftcol" type="boolean" value="true" -->
+<!-- InstanceParam name="maincontent-id" type="text" value="maincontent2" -->
+<!-- InstanceParam name="maincontent-opt" type="boolean" value="true" -->
+<!-- InstanceParam name="sectionid" type="text" value="home" -->
+<!-- InstanceParam name="sectionbanner" type="boolean" value="false" -->
+<!-- InstanceParam name="sectionbanner-id" type="text" value="sectionbanner2" -->
+<!-- InstanceParam name="main-pages" type="boolean" value="true" -->
+<!-- InstanceParam name="feature-pages" type="boolean" value="false" -->
+<!-- InstanceParam name="bigsmallcol" type="boolean" value="false" -->
+<!-- InstanceParam name="meetings" type="boolean" value="true" -->
+</head>
+<body id="home">
+<!-- Start Skip Navigation: Accessibility Requirement -->
+<ul class="offscreen">
+  <li><a href="/" accesskey="H" title="Home [accesskey 'h']">Home</a></li>
+  <li><a href="#top-nav" accesskey="1" title="Skip to navigation [accesskey '1']">Skip to top navigation</a></li>
+  <li><a href="#content" accesskey="2" title="Skip to side navigation [accesskey '2']">Skip to side navigation</a></li>
+  <li><a href="#page-body" accesskey="3" title="Skip to content [accesskey '3']">Skip to content</a></li>
+  <li><a href="#footer" accesskey="4" title="Skip to footer [accesskey '4']">Skip to footer</a></li>
+</ul>
+<!-- End Skip Navigation: Accessibility Requirement --> 
+<!-- Sliver Start --> 
+ <!-- ##################################################################w11n -->
+<!-- insert citizen alert -->
+
+
+<div id="sliver_container"> 
+  <div class="sliver"> 
+    <h2><a href="http://www.maine.gov/">Maine.gov</a></h2>
+      <ul> 
+        <li><a href="http://www.maine.gov/portal/government/state-agencies.php">Agencies</a> |</li>
+        <li><a href="http://www.maine.gov/portal/online_services/index.html">Online Services</a> |</li>
+        <li><a href="http://www.maine.gov/portal/help/index.html">Help</a> |</li>
+        <li><a href="http://www.maine.gov/search/" class="state_search">Search Maine.gov</a></li>
+      </ul>
+
+<div id="google_translate_element"></div><script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </div>
+</div>
+
+  
+<!-- Sliver End -->
+<div id="container"> 
+  
+    
+  <header>
+    <div class="sub-container clearfix"><span class="clearfix"></span>
+      <h2 class="logo"><a href="index.html">Maine Geolibrary</a></h2>
+      <div class="header_nav_search">
+        <ul class="nav clearfix" id="vtopnav">
+          <li><a href="contactus.html">Contact Us</a></li>
+          <li><a href="sitemap.html" title="sitemap"> | &nbsp;Sitemap</a></li>
+        </ul>
+        <div role="search" class="header_search">
+          <form action="https://www.maine.gov/search" method="get">
+            <input type="text" size="24" name="q" id="headersearch" class="search_area" placeholder="Search Maine Geolibrary">
+            <input class="blue_btn" type="submit" value="Search">
+            <input type="hidden" value="https://www.maine.gov/geolib/" name="as_sitesearch">
+            <input type="hidden" value="test_collection" name="site">
+            <input type="hidden" value="xml_no_dtd" name="output">
+            <input type="hidden" value="test_collection" name="client">
+            <input type="hidden" value="test_collection" name="proxystylesheet">
+          </form>
+        </div>
+        <!-- end header_search --> 
+      </div>
+    </div>
+    <!--End Sub-Container--> 
+  </header>
+  
+  <nav id="top-nav" aria-label="Main menu" role="navigation" class="megamenu">
+    <div class="sub-container clearfix">
+      <ul class="sf-menu" id="dropdown">
+        <li><a href="index.html" class="hometab" id="home">Home</a></li>
+        <li><a href="#" class="programtab" id="programs">Projects</a>
+            <ul> 
+                <li><a href="programs/parcels/index.html" class="parcelstab" id="parcels">Digital Parcels Project</a> </li>
+                <li><a href="programs/landcover/index.html" class="orthotab" id="ortho"> High Resolution Land Cover Project</a></li>
+                <li><a href="programs/lidar/index.html" class="lidartab" id="lidar">LiDAR Project</a></li>
+                <li><a href="onemap/index.html" class="onemaptab" id="onemaptab">OneMAP</a></li>
+                <li><a href="programs/ortho/index.html" class="orthotab" id="ortho">Ortho Project</a></li>
+            </ul>
+        </li> 
+        <!--<li><a href="../resources/index.html" class="resourcestab" id="resources">Resources</a></li>-->
+        <li><a href="#" class="datatabmain" id="datatabmain">Data</a>
+            <ul>
+            	<li><a href="https://www.maine.gov/geolib/catalog.html"><!--<a href="../catalog.html">-->GeoLibrary Data Catalog</a></li>
+        		<!--<li><a href="../data/index.html" class="datatab" id="datatab">Geospatial Data Services</a></li>-->
+                <li><a href="imgdiscovery/site/landing.html" class="imgdisctab" id="imgdisctab">Image Discovery app</a></li>
+				<li><a href="ediscovery/site/landing.html" class="imgdisctab" id="imgdisctab">Elevation Data Discovery app</a></li>
+                <li><a href="data/index.html" class="datatab" id="datatab">Geospatial Data Services</a></li>
+				<li><a href="https://viewer.nationalmap.gov/services/" target="_blank">Federal Partner Sites (external site)</a></li>
+            </ul>
+        </li>
+        <li><a href="data/apps.html" class="newstab" id="appsnew">Apps</a></li>
+        <li><a href="maps/index.html" class="newstab" id="appsnew">Maps</a></li>
+        <li><a href="StrategicPlan/index.html" class="newstab" id="stratplantab">Strategic Plan</a></li>      
+      </ul>
+    </div>
+  </nav>
+  
+  <div id="content" class="clearfix">
+  
+    
+	     
+	
+    <nav id="sectionnav" aria-label="Section Navigation" role="navigation">
+      
+      <ul class="mainnav">
+        <li><a href="members/index.html">Members</a></li>
+        <li><a href="policies/index.html">Publications</a></li>
+        <li><a href="reports/index.html">Annual Reports</a></li>
+        <!-- <li><a href="../calendar.html">Geolibrary Calendar</a></li> -->
+        <li><a href="contactus.html">Contact Us</a></li>      
+        <li>
+          <h3>Meetings
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="meetings/agenda.html">Schedule & Agendas</a></li>
+            <li><a href="meetings/minutes.html">Minutes</a></li>
+            <li><a href="meetings/archives/index.html">Archives</a></li>
+          </ul>
+          <!-- end meetings (left sidebar) subnav -->
+        </li>
+        <li>
+          <h3>Committees
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="committees/finance.html">Finance</a></li>
+            <li><a href="committees/policy.html">Policy</a></li>
+            <li><a href="committees/technical.html">Technical</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Workgroups
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="committees/workgroups/geodata.html">Geospatial Data</a></li>
+            <li><a href="committees/workgroups/education.html">Education and Training</a></li>
+            <li><a href="committees/workgroups/geoparcels.html">Geoparcels</a></li>
+          </ul>
+        </li>       
+      </ul>
+      <!-- end sample pages navigation -->	 
+     </nav>
+    <nav id="mobilenav" aria-label="Mobile Navigation" role="navigation">
+      <ul id="mobilemenu" class="sm sm-simple">
+                <li><a href="members/index.html">Members</a></li>
+        <li><a href="policies/index.html">Policies and Standards</a></li>
+        <li><a href="reports/index.html">Annual Reports</a></li>
+        <li><a href="calendar.html">Geolibrary Calendar</a></li>
+        <li><a href="contactus.html">Contact Us</a></li>      
+        <li>
+          <h3>Meetings
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="meetings/agenda.html">Agenda</a></li>
+            <li><a href="meetings/minutes.html">Minutes</a></li>
+            <li><a href="meetings/archives/index.html">Archives</a></li>
+          </ul>
+          <!-- end meetings (left sidebar) subnav -->
+        </li>
+        <li>
+          <h3>Committees
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="committees/finance.html">Finance</a></li>
+            <li><a href="committees/policy.html">Policy</a></li>
+            <li><a href="committees/technical.html">Technical</a></li>
+          </ul>
+        </li>
+        <li>
+          <h3>Workgroups
+          </h3>
+        </li>
+        <li>
+          <ul>
+            <li><a href="committees/workgroups/coordination.html">Coordination and Communication</a></li>
+            <li><a href="committees/workgroups/geodata.html">Geospatial Data</a></li>
+            <li><a href="committees/workgroups/education.html">Education and Training</a></li>
+            <li><a href="committees/workgroups/geoparcels.html">Geoparcels</a></li>
+          </ul>
+        </li>       
+      </ul>
+<!-- end sample pages navigation -->	
+    </nav>
+    <!-- end leftcol -->     
+     <span id="page-body"></span>
+    <div id="maincontent2" class="article" role="main">
+     <!-- InstanceBeginEditable name="maincontent2" -->
+     <div class="cataloglegend">
+     	<p><strong>Legend</strong></p>
+        <ul style="list-style-type: none; margin:0; padding:0;">
+        	<li><img src="catalog/images/rest_icon_tiny.png" alt="Web service"/> &nbsp; Web Service</li>
+            <li><img src="catalog/images/ge_icon_tiny.png" alt="download kml"/>&nbsp; Download KML/KMZ</li>
+            <li><img src="catalog/images/shp_icon_tiny.png" alt="Download shapefile"/>&nbsp; Download Shapefile</li>
+            <li><img src="catalog/images/tile_icon_tiny.png" alt="Download tiled data">&nbsp; Download by tile</li>
+            <li><img src="catalog/images/net2_icon_tiny.png" alt="Web App" />&nbsp; Web App</li>
+            <li><img src="catalog/images/metadata_icon_tiny.png" alt="Metadata"/>&nbsp; View Metadata</li>
+			<li><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" />&nbsp;Download File Geodatabase</li>
+        </ul>
+     </div>
+<div class="loader" id="loader" style="display:none;"></div>
+<a name="top"></a>
+<h1>GeoLibrary Data Catalog</h1>
+ <!--<p><span style="color:red;font-size:20px;font-weight:bold"><strong>MEGIS Service Outages, June 6, 2022: </strong>We are currently experiencing intermittent outages with the GIS environment. Some services and content in the Data Catalog may be unavailable during that period. We are currently working on the problem. </span></p>-->
+		<br/>
+		<span style="color:red"><strong><p>Hello Maine GeoLibrary Data Catalog Users. There is currently a partial outage on the process to download GIS data from the Data Catalog impacting the direct catalog discovery and download tools. Our technology provider has identified a bug and is working toward resolution and restoral.  We do not yet have an estimated time for resolution, but are actively monitoring progress to that end. Until a solution for that direct download option is deployed, we encourage our users to consume our GIS services and/or perform downloads from within compatible GIS clients connected to these services that support using the Esri REST API.</p>
+
+<p>Progress updates to this notification will be posted as more specific timing for correction of the bug is known or as process conditions change.
+			</p></strong></span>
+
+<h2>List by ISO Category | <a href="https://www2.usgs.gov/science/about/thesaurus-full.php?thcode=15" target="_blank">Definitions</a></h2>
+<p><a href="catalogalpha.html"><strong>List Alphabetically</strong></a><br/></p>
+<p><a href="catalogagency.html"><strong>List by Agency</strong></a></p>
+<p><strong><a href="./data/apps.html" title="Web maps and apps" target="_self">List of GIS Web Applications and Web Maps</a></strong></p>
+<!--<p><a href="https://www.fgdc.gov/metadata/iso-standards" target="_blank">ISO Geospatial Metadata Standards</a> </p>-->
+
+<!--List of links by category-->
+<div style="background-color:#2a2e78; width:80%; text-align:center; padding-top:1px">
+
+<h3 style="color:#FFF">Jump to Category:</h3>
+
+<select title="Category" onchange="location = this.value";>
+	<option value="#top">Select</option>
+	<option value="#agriculture">farming</option>
+    <!--<option value="#basemap">Basemap</option>-->
+    <option value="#biota">biota</option>
+    <option value="#boundaries">boundaries</option>
+    <option value="#climatology">climatologyMeteorologyAtmosphere</option>
+    <option value="#economy">economy</option>
+    <option value="#elevation">elevation</option>
+    <option value="#environment">environment</option>
+    <option value="#geoscientificinformation">geoscientificInformation</option>
+    <option value="#health">health</option>
+    <option value="#imagery">imageryBaseMapsEarthCover</option>
+    <option value="#inlandwaters">inlandWaters</option>
+    <option value="#locations">location</option>
+    <option value="#oceans">oceans</option>
+    <!--<option value="#publicsafety">Public Safety</option>-->
+    <option value="#planning">planningCadastre</option>
+    <option value="#society">society</option>
+    <option value="#structure">structure</option>
+    <option value="#transportation">transportation</option>
+    <option value="#utilities">utilitiesCommunication</option>
+</select>
+<br/>&nbsp;
+</div>
+
+<p>&nbsp;</p>
+	<a name="agriculture"></a>
+    <table id="tblAgricultureFarming"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table>
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+    <p>&nbsp;</p>      
+    
+   <!--  <a name="basemap"></a>
+    <table id="tblBasemap" class="catalogtable" cols="2" width="80%">
+    	<tr><th>Data Layer</th><th>Download</th></tr> 
+    </table> 
+    <p style="font-size:medium; text-align:center"><a href="#top">Back to top of page</a></p>
+    <p>&nbsp;</p>    -->
+    
+    <a name="biota"></a>
+    <table id="tblBiota" class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table>
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+    <p>&nbsp;</p>  
+    
+    <a name="boundaries"></a> 
+    <table id="tblBoundaries"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>    
+   <p>&nbsp;</p> 
+   
+   <a name="climatology"></a>
+    <table id="tblClimatologyMeteorologyAtmosphere"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="economy"></a>
+    <table id="tblEconomy"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="elevation"></a>
+    <table id="tblElevation"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="environment"></a>
+    <table id="tblEnvironment"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="geoscientificinformation"></a>
+    <table id="tblGeoscientificInformation"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="health"></a>
+    <table id="tblHealth"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="imagery"></a>
+    <table id="tblImagery"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr>
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+    <a name="inlandwaters"></a>
+    <table id="tblInlandWaters"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p>
+   
+   <a name="locations"></a> 
+    <table id="tblLocations"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="oceans"></a>
+    <table id="tblOceans"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+      
+   <a name="planning"></a>
+    <table id="tblPlanningCadastral"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="society"></a>
+    <table id="tblSociety"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="structure"></a>
+    <table id="tblStructure"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="transportation"></a>
+    <table id="tblTransportation"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	
+    <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>
+   <p>&nbsp;</p> 
+   
+   <a name="utilities"></a>
+    <table id="tblUtilitiesCommunication"  class="catalogtable" cols="3" width="80%">
+    	<tr><th>Layer</th><th>Service</th><th>Download</th></tr> 
+    </table> 	   
+     <p style="font-size:small; text-align:center"><a href="#top">Back to top of page</a></p>   
+    
+
+		<script type='text/javascript'> 
+			var arrayDataList=[];
+			var $ListWebApps = $('#ListWebApps')
+			var $ListDatasets = $('#ListDatasets')
+			var arrayListDatasets=[];
+
+			$ListDatasets.html('');
+			
+			var $tblAgricultureFarming = $('#tblAgricultureFarming');
+		//	var $tblBasemap = $('#tblBasemap');
+			var $tblBiota = $('#tblBiota');
+			var $tblBoundaries = $('#tblBoundaries');			
+			var $tblClimatologyMeteorologyAtmosphere = $('#tblClimatologyMeteorologyAtmosphere');
+			var $tblEconomy = $('#tblEconomy');			
+			var $tblElevation = $('#tblElevation');			
+			var $tblEnvironment = $('#tblEnvironment');	
+			var $tblGeoscientificInformation = $('#tblGeoscientificInformation');			
+			var $tblHealth = $('#tblHealth');					
+			var $tblImagery = $('#tblImagery');
+			var $tblInlandWaters = $('#tblInlandWaters');
+			var $tblLocations = $('#tblLocations');
+			var $tblOceans = $('#tblOceans');
+			var $tblPlanningCadastral = $('#tblPlanningCadastral');	
+		//	var $tblPublicSafety = $('#tblPublicSafety');	
+			var $tblSociety = $('#tblSociety');	
+			var $tblStructure = $('#tblStructure');	
+			var $tblTransportation = $('#tblTransportation');			
+			var $tblUtilitiesCommunication = $('#tblUtilitiesCommunication');		
+					
+			
+			$tblAgricultureFarming.html('<table id="tblAgricultureFarming" class="catalogtable" cols="3" ><thead><tr><td colspan="3"><theadtitle>farming</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF;"><theadsub>rearing of animals and/or cultivation of plants</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> agriculture, irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and livestock</example></td></tr></thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+
+			$tblBiota.html('<table id="tblBiota" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>biota</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF;"><theadsub>flora and/or fauna in natural environment</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> wildlife, vegetation, biological sciences, ecology, wilderness, sea life, wetlands, habitat, biological resources</example></td></tr></thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblBoundaries.html('<table id="tblBoundaries" class="catalogtable" cols="3"><thead><tr><td colspan="3"><theadtitle>boundaries</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>legal land descriptions</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> political and administrative boundaries, governmental units, marine boundaries, voting districts, school districts, international boundaries</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblClimatologyMeteorologyAtmosphere.html('<table id="tblClimatologyMeteorologyAtmosphere" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>climatologyMeteorologyAtmosphere</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>processes and phenomena of the atmosphere</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> cloud cover, weather, climate, atmospheric conditions, climate change, precipitation</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');			
+
+			$tblEconomy.html('<table id="tblEconomy" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>economy</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>economic activities, conditions, and employment</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> production, labor, revenue, business, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or subsistence hunting, exploration and exploitation of resources such as minerals, oil and gas</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblElevation.html('<table id="tblElevation" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>elevation</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>height above or below sea level</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> altitude, bathymetry, digital elevation models, slope, derived products, DEMs, TINs</example><br/><theadsub><strong>NOTE:The Maine GeoLibrary relies on our LiDAR Project Federal Partners to host point cloud data.  Those data are not available in the  Maine GeoLibrary Data Catalog or this app.  Please access point cloud data from <a href="https://apps.nationalmap.gov/downloader/#/" target="_blank">The National Map Download App</a> or <a href="https://coast.noaa.gov/dataviewer/#" target="_blank">NOAA Data Access Viewer</a></strong></theadsub></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblEnvironment.html('<table id="tblEnvironment" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>environment</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>environmental resources, protection and conservation</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> environmental pollution, waste storage and treatment, environmental impact assessment, monitoring environmental risk, nature reserves, landscape, water quality, air quality, environmental modeling</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblGeoscientificInformation.html('<table id="tblGeoscientificInformation" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>geoscientificInformation</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub> information pertaining to earth sciences</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong>  geophysical features and processes, geology, minerals, sciences dealing with the composition, structure and origin of the earth?s rocks, risks of earthquakes, volcanic activity, landslides, gravity information, soils, permafrost, hydrogeology, groundwater, erosion</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblHealth.html('<table id="tblHealth" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>health</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>health, health services, human ecology, and safety</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong>  disease and illness, factors affecting health, hygiene, substance abuse, mental and physical health, health services, health care providers, public health</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblImagery.html('<table id="tblImagery" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>imageryBaseMapsEarthCover</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>base maps</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> land/earth cover, topographic maps, imagery, unclassified images, annotations, digital ortho imagery</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblInlandWaters.html('<table id="tblInlandWaters" class="catalogtable" cols="3"><thead><tr><td colspan="3"><theadtitle>inlandWaters</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>inland water features, drainage systems and characteristics</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> rivers and glaciers, salt lakes, water utilization plans, dams, currents, floods and flood hazards, water quality, hydrographic charts, watersheds, wetlands, hydrography</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblLocations.html('<table id="tblLocations" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>location</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>positional information and services</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> addresses, geodetic networks, geodetic control points, postal zones and services, place names, geographic names</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+			
+			$tblOceans.html('<table id="tblOceans" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>oceans</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>features and characteristics of salt water bodies (excluding inland waters)</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> tides, tidal waves, coastal information, reefs, maritime, outer continental shelf submerged lands, shoreline</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblPlanningCadastral.html('<table id="tblPlanningCadastral" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>planningCadastre</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>information used for appropriate actions for future use of the land</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> land use maps, zoning maps, cadastral surveys, land ownership, parcels, easements, tax maps, federal land ownership status, public land conveyance records</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblSociety.html('<table id="tblSociety" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>society</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>characteristics of society and culture</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong>  settlements, housing, anthropology, archaeology, education, traditional beliefs, manners and customs, demographic data, tourism, recreational areas and activities, parks, recreational trails, historical sites, cultural resources, social impact assessments, crime and justice, law enforcement, census information, immigration, ethnicity</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblStructure.html('<table id="tblStructure" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>structure</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>man-made construction</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> buildings, museums, churches, factories, housing, monuments, shops, towers, building footprints, architectural and structural plans</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblTransportation.html('<table id="tblTransportation" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>transportation</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>means and aids for conveying persons and/or goods</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong> roads, airports/airstrips, shipping routes, tunnels nautical charts, vehicle or vessel location, aeronautical charts, railways</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');
+
+			$tblUtilitiesCommunication.html('<table id="tblUtilitiesCommunication" class="catalogtable" cols="3"><thead><tr><td colspan="3" ><theadtitle>utilitiesCommunication</theadtitle></td></tr><tr><td colspan="3" style="background-color:#FFF"><theadsub>energy, water and waste systems and communications infrastructure and services</theadsub></td></tr><tr><td colspan="3"><example><strong>Examples:</strong>  hydroelectricity, geothermal, solar and nuclear sources of energy, water purification and distribution, sewage collection and disposal, electricity and gas distribution, data communication, telecommunication, radio, communication networks</example></tr></td> </thead><tr><th>Layer</th><th>Service</th><th>Download</th></tr>');			
+		
+
+			var imageAppUrl='<a href="https://www.maine.gov/geolib/imgdiscovery/site/landing.html" target="_blank"><img img src="catalog/images/net2_icon_tiny.png" alt="discovery-download app" /></a>';	
+			var elevationAppUrl='<a href="https://www.maine.gov/geolib/ediscovery/site/landing.html" target="_blank"><img img src="catalog/images/net2_icon_tiny.png" alt="discovery-download app" /></a>';		
+
+			
+			var arrayListDatasets=[];			
+			
+			var arrayTblAgriculture=[];
+			var arrayTblBasemap=[];
+			var arrayTblBiota=[];
+			var arrayTblBoundaries=[];
+			var arrayTblClimatologyMeteorologyAtmosphere=[];
+			var arrayTblEconomy=[];
+			var arrayTblElevation=[];
+			var arrayTblEnvironment=[];
+			var arrayTblGeoscientificInformation=[];
+			var arrayTblHealth=[];
+			var arrayTblImagery=[];
+			var arrayTblInlandWaters=[];
+			var arrayTblLocations=[];
+			var arrayTblOceans=[];
+			var arrayTblPublicSafety=[];
+			var arrayTblPlanningCadastre=[];
+			var arrayTblSociety=[];
+			var arrayTblStructure=[];
+			var arrayTblTransportation=[];
+			var arrayTblUtilitiesCommunication=[];			
+			
+						
+			//Get the data listings for each agency in JSON format
+			var dataList1=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/c887ab57be6d402bb372109f00b7cf4e?q=sortField:title&f=pjson&');
+			var dataList2=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/756456f798ab4e06b973817f82107078?q=sortField:title&f=pjson&');
+			var dataList3=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/041e7164ec554fc188996ba391b11cae?q=sortField:title&f=pjson&');
+			var dataList4=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/6c87f73c813244a4b6c610bfdcfedfcf?q=sortField:title&f=pjson&');
+			var dataList5=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/700c3e9083db41d1a619f8a3eaf40a50?q=sortField:title&f=pjson&');
+			var dataList6=$.getJSON('https://maine.maps.arcgis.com/sharing/rest/content/groups/d08c2468ae4e494e868dc220b08c2bfa?q=sortField:title&f=pjson&');
+			
+			var dataList7=$.getJSON(		'https://maine.maps.arcgis.com/sharing/rest/content/groups/5a9dc9d1751d4faba2a9c75a073e04f5?q=sortField:title&f=pjson&');
+
+			var dataList8=$.getJSON(		'https://maine.maps.arcgis.com/sharing/rest/content/groups/ffdbfbe726364a598af766b81282a8a4?q=sortField:title&f=pjson&');
+
+			var dataListsProcessed=0;
+
+			$.when(dataList1).done(function (dataList1){
+				grabTheData(dataList1);
+			});		
+			$.when(dataList2).done(function (dataList2){
+				grabTheData(dataList2);
+			});				
+			$.when(dataList3).done(function (dataList3){
+				grabTheData(dataList3);
+			});	
+			$.when(dataList4).done(function (dataList4){
+				grabTheData(dataList4);
+			});
+			$.when(dataList5).done(function (dataList5){
+				grabTheData(dataList5);
+			});
+			$.when(dataList6).done(function (dataList6){
+				grabTheData(dataList6);
+			});
+
+			$.when(dataList7).done(function (dataList7){
+				grabTheData(dataList7);
+			});
+			$.when(dataList8).done(function (dataList8){
+				grabTheData(dataList8);
+			});				
+				//----------------
+			function buildTheHtml(){	
+				//Sort each array on title, so that listings will be alphabetical in each category
+				
+				arrayTblAgriculture.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+			//	arrayTblBasemap.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblBiota.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblBoundaries.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblClimatologyMeteorologyAtmosphere.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblEconomy.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblElevation.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblEnvironment.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblGeoscientificInformation.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblHealth.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblImagery.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblInlandWaters.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblLocations.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblOceans.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+		//		arrayTblPublicSafety.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblPlanningCadastre.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblSociety.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				//arrayTblStructure=$.unique(arrayTblStructure);
+				arrayTblStructure.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblTransportation.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+				arrayTblUtilitiesCommunication.sort(function(a,b){return (a.title > b.title)?1:((b.title>a.title)?-1:0);});
+								
+
+				//Write the html to each ISO category on the page:
+
+				
+				<!-- build  table-->
+				$.each(arrayTblAgriculture, function(key,val){
+					$("#tblAgricultureFarming").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+					//console.log(val.htmlString);
+				});
+				$("#tblAgricultureFarming").append('</table>');			
+				
+								
+				$.each(arrayTblBiota, function(key,val){
+					$("#tblBiota").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblBiota").append('</table>');
+				
+				
+				$.each(arrayTblBoundaries, function(key,val){
+					$("#tblBoundaries").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});	
+				$("#tblBoundaries").append('</table>');
+
+				if(arrayTblClimatologyMeteorologyAtmosphere.length > 0){				
+					$.each(arrayTblClimatologyMeteorologyAtmosphere, function(key,val){
+						$("#tblClimatologyMeteorologyAtmosphere").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+					});			
+				}else{
+					$("#tblClimatologyMeteorologyAtmosphere").append('<tr><td class="title" colspan="3">No data available at this time</td></tr>');					
+				}
+				$("#tblClimatologyMeteorologyAtmosphere").append('</table>');		
+	
+				$.each(arrayTblEconomy, function(key,val){
+					$("#tblEconomy").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblEconomy").append('</table>');
+				
+				$.each(arrayTblElevation, function(key,val){
+					$("#tblElevation").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblElevation").append('</table>');
+				
+				$.each(arrayTblEnvironment, function(key,val){
+					$("#tblEnvironment").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblEnvironment").append('</table>');
+				
+				$.each(arrayTblGeoscientificInformation, function(key,val){
+					$("#tblGeoscientificInformation").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblGeoscientificInformation").append('</table>');
+				
+				$.each(arrayTblHealth, function(key,val){
+					$("#tblHealth").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblHealth").append('</table>');
+				
+				$.each(arrayTblImagery, function(key,val){
+					$("#tblImagery").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblImagery").append('</table>');
+
+				$.each(arrayTblInlandWaters, function(key,val){
+					$("#tblInlandWaters").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblInlandWaters").append('</table>');
+								
+				$.each(arrayTblLocations, function(key,val){
+					$("#tblLocations").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblLocations").append('</table>');
+				
+				$.each(arrayTblOceans, function(key,val){
+					$("#tblOceans").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblOceans").append('</table>');
+							
+				
+				$.each(arrayTblPlanningCadastre, function(key,val){
+					$("#tblPlanningCadastral").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblPlannngCadastral").append('</table>');
+			
+				$.each(arrayTblSociety, function(key,val){
+					$("#tblSociety").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblSociety").append('</table>');
+					
+				$.each(arrayTblStructure, function(key,val){
+					$("#tblStructure").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblStructure").append('</table>');	
+				
+				$.each(arrayTblTransportation, function(key,val){
+					$("#tblTransportation").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+				});
+				$("#tblTransportation").append('</table>');	
+				
+				if(arrayTblUtilitiesCommunication.length > 0){
+					$.each(arrayTblUtilitiesCommunication, function(key,val){
+						$("#tblUtilitiesCommunication").append('<tr><td class="title">'+val.tblTitleString+'</td><td>'+val.htmlString+'</td></tr>');
+					});
+				}else{
+					$("#tblUtilitiesCommunication").append('<tr><td class="title" colspan="3">No data available at this time</td></tr>');
+				}
+				$("#tblUtilitiesCommunication").append('</table>');		
+				
+			}
+
+
+				function grabTheData(dataList){
+				
+				$.each(dataList.items, function(key, val){
+					if (val.type == 'Feature Service' || val.type == 'Map Service' || val.type== 'Image Service'|| val.type== 'Data' || val.type == 'File Geodatabase') {
+
+						var arrayTags = val.tags;
+						var arrayTypeKeywords=val.typeKeywords;
+						var multiLayerType=0;
+						var layerNum="";
+						var spatialRef=null;
+						var srsString="";
+						
+						var catTitle = val.title.replace(/ - /g,'-').replace(/ /g,'-').replace(/\(|\)/g,'').toLowerCase();
+						console.log(val.title);
+						console.log(catTitle);
+						var catUrl = "https://maine.hub.arcgis.com/datasets/" + val.id;		
+						var restUrl="";
+						var wmsUrl="";
+						var wcsUrl="";
+						var wfsUrl="";
+						var kmzUrl="";
+						var kmlUrl="";
+						var shpUrl="";
+						var metaUrl="";
+						var kmlZipUrl="";						
+						var shpZipUrl="";
+						var shpId="";
+						var kmlId="";
+						var fgdbLink="";
+						
+						//Format the HTML text:
+						var catUrlString='<a href="' + catUrl + '">' + val.title + '</a>';
+						
+						metaUrl='<a href="https://maine.maps.arcgis.com/home/item.html?id=' + val.id + '" target="_blank"><img src="catalog/images/metadata_icon_tiny.png" alt="Metadata"/></a>';
+						
+						if(val.type != 'File Geodatabase'){						
+						//Check layer type whether single or multi layer
+						if(jQuery.inArray("Multilayer",val.typeKeywords) > -1){
+							multiLayerType=2;
+							layerNum=val.url.substr(val.url.lastIndexOf("/")+1);
+						}else if(jQuery.inArray("Singlelayer",val.typeKeywords) > -1){
+							multiLayerType=1;
+							layerNum=val.url.substr(val.url.lastIndexOf("/")+1);
+							console.log(val.name+","+layerNum);
+
+						}else{
+							multiLayerType=0;
+							layerNum=val.url.substr(val.url.lastIndexOf("/")+1);
+						}
+						//if(isNaN(layerNum)){
+						
+						//}
+						
+						//Look for a defined spatial reference in data.  Set default spatial reference to unknown if it's null.
+						if (val.spatialReference==null){
+							srsString="";
+						}else if (val.spatialReference=="[object Object]"){
+							srsString="";
+						}else if (val.spatialReference=="NAD_1983_UTM_Zone_19N"){
+							srsString='?outSR={%22wkid%22:'+spatialRef+',%22latestWkid%22:'+spatialRef+'}';
+						}else{
+							spatialRef=val.spatialReference;
+							srsString='?outSR={%22wkid%22:'+spatialRef+',%22latestWkid%22:'+spatialRef+'}';
+						}
+						
+
+						
+						//create the OGC Url
+						if((val.owner=="Todd.Metzler@maine.gov_maine")||(val.owner=="bob.bistrais@maine.gov_maine")){
+
+							var svcEndpoint='';	
+							if(Number.isInteger(parseInt(val.url.substr(val.url.length - 1)))){  
+								svcEndpoint=(val.url.substring(0, val.url.lastIndexOf("/")));
+							}else{
+								svcEndpoint=val.url;
+							}
+							
+							wmsString=svcEndpoint.replace("/rest","") + '/WMSServer?request=GetCapabilities&service=WMS';
+							wmsUrl='<a href="'+wmsString+'"><img  src="catalog/images/wms_icon_tiny.png" alt="WMS"/></a>';
+							
+							if(val.type =="Image Service"){
+								wcsString=svcEndpoint.replace("/rest","") + '/WCSServer?request=GetCapabilities&service=WCS';
+								wcsUrl='<a href="'+wcsString+'"><img  src="catalog/images/wcs_icon_tiny.png" alt="WCS"/></a>';								
+							}
+
+							if(val.type =="Feature Service"){
+								wfsString=svcEndpoint.replace("/rest","") + '/WFSServer?request=GetCapabilities&service=WFS';
+								wfsUrl='<a href="'+wfsString+'"><img  src="catalog/images/wfs_icon_tiny.png" alt="WFS"/></a>';								
+							}							
+						}
+						//---ogc url
+
+						
+						if(multiLayerType<=1){
+							restUrl='<a href="'+val.url+'"><img src="catalog/images/rest_icon_tiny.png" alt="REST service"/></a>';
+							if (val.type == 'Feature Service' || val.type == 'Map Service' || val.type == 'Data'){	
+								shpId="s"+val.id;
+								kmlId="k"+val.id;
+								if(isNaN(layerNum)){
+									if(val.type != 'Map Service'){
+										shpZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_0.zip'+srsString;
+										shpUrl='<button type="button" id='+shpId+' onclick="getzipfile('+"'"+shpZipUrl+"'"+',this.id)"><img src="catalog/images/shp_icon_tiny.png" alt="Download shapefile" onmousedown="this.src='+ "'catalog/images/shp_icon_tiny_click.png'"+'"; onmouseup="this.src='+"'catalog/images/shp_icon_tiny.png'"+'";/></button>';
+										
+										kmlZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_0.kml'+srsString;
+										kmlUrl='<button type="button" id='+kmlId+' onclick="getkmzfile('+"'"+kmlZipUrl+"'"+',this.id)"><img src="catalog/images/ge_icon_tiny.png" alt="download kml" onmousedown="this.src='+ "'catalog/images/ge_icon_tiny_click.png'"+'" onmouseup="this.src='+"'catalog/images/ge_icon_tiny.png'"+'";/></button>';
+									}	
+
+								}else{
+									if(val.type != 'Map Service'){
+										shpZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_'+val.url.substr(val.url.lastIndexOf("/")+1)+'.zip'+srsString;
+										shpUrl='<button type="button" id='+shpId+' onclick="getzipfile('+"'"+shpZipUrl+"'"+',this.id)"><img src="catalog/images/shp_icon_tiny.png" alt="Download shapefile" onmousedown="this.src='+ "'catalog/images/shp_icon_tiny_click.png'"+'"; onmouseup="this.src='+"'catalog/images/shp_icon_tiny.png'"+'";/></button>';
+										
+										kmlZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_'+val.url.substr(val.url.lastIndexOf("/")+1)+'.kml'+srsString;
+										kmlUrl='<button type="button" id='+kmlId+' onclick="getkmzfile('+"'"+kmlZipUrl+"'"+',this.id)"><img src="catalog/images/ge_icon_tiny.png" alt="download kml" onmousedown="this.src='+ "'catalog/images/ge_icon_tiny_click.png'"+'" onmouseup="this.src='+"'catalog/images/ge_icon_tiny.png'"+'";/></button>';
+									}									
+									else{										
+										shpZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_0.zip'+srsString;
+										shpUrl='<button type="button" id='+shpId+' onclick="getzipfile('+"'"+shpZipUrl+"'"+',this.id)"><img src="catalog/images/shp_icon_tiny.png" alt="Download shapefile" onmousedown="this.src='+ "'catalog/images/shp_icon_tiny_click.png'"+'"; onmouseup="this.src='+"'catalog/images/shp_icon_tiny.png'"+'";/></button>';
+										
+										kmlZipUrl='https://opendata.arcgis.com/datasets/'+val.id+'_0.kml'+srsString;
+										kmlUrl='<button type="button" id='+kmlId+' onclick="getkmzfile('+"'"+kmlZipUrl+"'"+',this.id)"><img src="catalog/images/ge_icon_tiny.png" alt="download kml" onmousedown="this.src='+ "'catalog/images/ge_icon_tiny_click.png'"+'" onmouseup="this.src='+"'catalog/images/ge_icon_tiny.png'"+'";/></button>';
+									}
+								}
+							}
+							else{
+								shpZipUrl='';
+								shpUrl='';
+								kmlZipUrl='';
+								kmlUrl='';
+							}
+
+						}else{
+							restUrl='<a href="'+val.url+'"><img src="catalog/images/rest_icon_tiny.png" alt="REST service"/></a>';
+
+							kmlUrl='';
+							shpUrl='';
+
+							if(val.title == 'Maine Parcels Organized Towns'){
+								shpUrl='<a href="./download_parcel_by_town.html"><img src="./catalog/images/tile_icon_tiny.png" alt="Tile download page"/></a>';
+								kmlUrl="&nbsp;";
+								fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/54cdfff41b214264997d291b76d69886/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+							}else{
+								metaUrl='Click Layer Link for downloads';
+							}
+						}
+						
+							if(val.title == 'Maine E911 Addresses'){
+								shpUrl='&nbsp';
+								kmlUrl="&nbsp;";
+								fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/b5dc9906157e4b55a661a5c8ec5f04f9/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+							}else if(val.title == 'Maine E911 Roads'){
+								shpUrl='&nbsp;';
+								kmlUrl="&nbsp;";
+								fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/b5dc9906157e4b55a661a5c8ec5f04f9/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+							}else if(val.title =='Deprecated Maine Elevation Contours 2 Feet Layer'){
+								shpUrl='<a href= "https://www.maine.gov/geolib/download_contour_by_town.html">Download by Town</a>'
+								kmlUrl="&nbsp;";
+								metaUrl='<a href="https://maine.maps.arcgis.com/home/item.html?id=' + val.id + '" target="_blank"><img src="catalog/images/metadata_icon_tiny.png" alt="Metadata"/></a>';
+
+							}else if(val.title.includes('Maine Elevation Contours 2 Feet')){
+								shpUrl=''
+								kmlUrl="&nbsp;";
+								metaUrl='<a href="https://maine.maps.arcgis.com/home/item.html?id=' + val.id + '" target="_blank"><img src="catalog/images/metadata_icon_tiny.png" alt="Metadata"/></a>';
+								
+								
+							}else if(val.title.includes('Maine Elevation Contours 20 Feet')){
+								<!--shpUrl='<a href="./download_contour_by_town.html"><img src="./catalog/images/tile_icon_tiny.png" alt="Tile download page"/></a>';-->
+								shpUrl="&nbsp;";
+								kmlUrl="&nbsp;";
+								fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/1e72b6eb8ba648f9a6eaac91bdb24b65/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+							}else if(val.title.includes('Maine Elevation Contours')){
+								fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/1e72b6eb8ba648f9a6eaac91bdb24b65/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+							}	
+							}	
+							else if(val.type == 'File Geodatabase'){
+									fgdbLink='<a href="https://www.arcgis.com/sharing/rest/content/items/'+val.id+'/data" ><img src="catalog/images/gdb_icon.png" alt="download file geodatabase" onmousedown="this.src='+ "'catalog/images/gdb_icon_click.png'"+'" onmouseup="this.src='+"'catalog/images/gdb_icon.png'"+'"; /></a>';
+								
+							}
+							
+						var dataHtmlString=null;
+						if(jQuery.inArray("imageryBaseMapsEarthCover",val.tags) > -1){
+							dataHtmlString=catUrlString+"&nbsp;"+restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+imageAppUrl+"&nbsp;"+metaUrl;						
+						} else if(jQuery.inArray("elevation",val.tags) > -1){
+							dataHtmlString=catUrlString+"&nbsp;"+restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+elevationAppUrl+"&nbsp;"+metaUrl;						
+						}else{
+							dataHtmlString=catUrlString+"&nbsp;"+restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+wfsUrl+wcsUrl+"&nbsp;"+kmlUrl+"&nbsp;"+shpUrl+"&nbsp;"+metaUrl;
+						}
+						
+						//for table
+						var tblHtmlString=null;
+						if(arrayTags.includes("imageryBaseMapsEarthCover") && (val.type== 'Image Service')){
+							tblHtmlString=restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+wcsUrl+"</td><td>"+imageAppUrl+"&nbsp;"+metaUrl;
+						}else if(arrayTags.includes("elevation") && (val.type=='Image Service')){
+							tblHtmlString=restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+wcsUrl+"</td><td>"+elevationAppUrl+"&nbsp;"+metaUrl;
+						}else if(arrayTags.includes('2 foot')){
+							var svcEndpoint='';	
+							if(Number.isInteger(parseInt(val.url.substr(val.url.length - 1)))){  
+								svcEndpoint=(val.url.substring(0, val.url.lastIndexOf("/")));
+							}else{
+								svcEndpoint=val.url;
+							}
+							wfsString=svcEndpoint.replace("/rest","") + '/WFSServer?request=GetCapabilities&service=WFS';
+							wfsUrl='<a href="'+wfsString+'"><img  src="catalog/images/wfs_icon_tiny.png" alt="WFS"/></a>';
+                            //Put in link to tile locator map:
+                            var	mapUrl='<a href="https://www.arcgis.com/home/webmap/viewer.html?webmap=eea0352f60af407e961b1a459abccc7b&extent=-74.5151,42.172,-63.4849,48.0491" target="_blank">Tile Reference Map</a>'			
+							tblHtmlString=restUrl+"&nbsp;"+wfsUrl+"</td><td><a href='https://storymaps.arcgis.com/stories/9fc3f1ebe7cd416cb3179d9d50218cae' target='_blank'><strong>HOW TO</strong> access 2-ft contour data</a><br/>&nbsp;"+"&nbsp;"+metaUrl;
+						}else{
+							tblHtmlString=restUrl+"&nbsp;"+wmsUrl+"&nbsp;"+wfsUrl+wcsUrl+"</td><td>"+kmlUrl+"&nbsp;"+shpUrl+"&nbsp;"+fgdbLink+"&nbsp;"+metaUrl;
+						}
+						var tblTitleString=null;
+						tblTitleString=catUrlString;
+						
+
+						var strTitle = val.title;
+						var itemID = val.id;
+						var url=val.url;
+						
+						var tblDataItem={title:val.title,tblTitleString:tblTitleString,url:val.url,id:val.id,htmlTitleString:tblTitleString,htmlString:tblHtmlString};					
+						//----
+						//Put the data item into appropriate array(s) depending on what ISO tags are found...
+						if ((jQuery.inArray("farming", arrayTags) !== -1)||(jQuery.inArray("aquaculture", arrayTags) !== -1)||(jQuery.inArray("shellfish", arrayTags) !== -1)){
+							//arrayAgriculture.push(dataItem);
+							arrayTblAgriculture.push(tblDataItem);
+						}
+				/*		if (jQuery.inArray("basemap", arrayTags) !== -1){
+							//arrayBasemap.push(dataItem);
+							arrayTblBasemap.push(tblDataItem); 
+						} */
+						if (jQuery.inArray("biota", arrayTags) !== -1){
+							//arrayBiota.push(dataItem);
+							arrayTblBiota.push(tblDataItem);
+						}
+						if (jQuery.inArray("boundaries", arrayTags) !== -1){
+							//arrayBoundaries.push(dataItem);
+							arrayTblBoundaries.push(tblDataItem);
+						}
+						if (jQuery.inArray("climatologyMeteorologyAtmosphere", arrayTags) !== -1){
+							//arrayclimatologyMeteorologyAtmosphere.push(dataItem);
+							arrayTblClimatoloyMeteorologyAtmosphere.push(tblDataItem);
+						}
+						if (jQuery.inArray("economy", arrayTags) !== -1){
+							//arrayEconomy.push(dataItem);
+							arrayTblEconomy.push(tblDataItem);
+						}
+						if(jQuery.inArray("elevation",arrayTags) !==-1){
+							//arrayElevation.push(dataItem);
+							arrayTblElevation.push(tblDataItem);
+						}
+						if (jQuery.inArray("environment", arrayTags) !== -1){
+							//arrayEnvironment.push(dataItem);
+							arrayTblEnvironment.push(tblDataItem);
+						}
+						if (jQuery.inArray("geoscientificInformation", arrayTags) !== -1){
+							//arrayGeoscientificInformation.push(dataItem);
+							arrayTblGeoscientificInformation.push(tblDataItem);
+						}
+						if ((jQuery.inArray("health", arrayTags) !== -1)||(jQuery.inArray("shellfish", arrayTags) !== -1)){
+							//arrayHealth.push(dataItem);
+							arrayTblHealth.push(tblDataItem);
+						}
+						if (jQuery.inArray("imageryBaseMapsEarthCover", arrayTags) !== -1){
+							//arrayImagery.push(dataItem);
+							arrayTblImagery.push(tblDataItem);
+						}
+						if (jQuery.inArray("inlandWaters", arrayTags) !== -1){
+							//arrayInlandWaters.push(dataItem);
+							arrayTblInlandWaters.push(tblDataItem);
+						}						
+						if(jQuery.inArray("location",arrayTags) !==-1){
+							//arrayLocation.push(dataItem);
+							arrayTblLocations.push(tblDataItem);
+						}
+						if ((jQuery.inArray("oceans", arrayTags) !== -1)||(jQuery.inArray("marine", arrayTags) !== -1)){
+							//arrayOceans.push(dataItem);
+							arrayTblOceans.push(tblDataItem);
+						}
+				/*		if (jQuery.inArray("publicSafety", arrayTags) !== -1){
+							//arrayPublicSafety.push(dataItem);
+							arrayTblPublicSafety.push(tblDataItem); 
+						} */
+						if (jQuery.inArray("planningCadastre", arrayTags) !== -1){
+							//arrayPlanningCadastre.push(dataItem);
+							arrayTblPlanningCadastre.push(tblDataItem);
+						}
+						if(jQuery.inArray("society",arrayTags) !==-1){
+							//arraySociety.push(dataItem);
+							arrayTblSociety.push(tblDataItem);
+						}
+						if (jQuery.inArray("structure", arrayTags) !== -1){
+							//arrayStructure.push(dataItem);
+							arrayTblStructure.push(tblDataItem);
+						}			
+						if (jQuery.inArray("transportation", arrayTags) !== -1){
+							//arrayTransportation.push(dataItem);
+							arrayTblTransportation.push(tblDataItem);
+						}	
+						if (jQuery.inArray("utilitiesCommunication", arrayTags) !== -1){
+							//arrayUtilitiesCommunication.push(dataItem);
+							arrayTblUtilitiesCommunication.push(tblDataItem);
+						}						
+					}
+				});
+			
+				dataListsProcessed++;
+				if(dataListsProcessed >=8)
+					buildTheHtml();
+			}
+				
+		</script>
+	</ul>
+
+      <!-- InstanceEndEditable --><!-- end editable maincontent --> 
+      
+    </div>
+    <!-- end maincontent --> 
+    
+	<!-- end rightcol --> 
+    </div><!-- end content id -->
+  
+   <footer id="footer" class="clearfix">
+  	<div class="sub-container">
+		<div class="footer_column">
+		  <!--<h4>Credits</h4>-->
+		  <p><img src="images/GeoPortal_GlobewBlue.jpg" alt="Insert alt text" width="85"></p>
+		  <p>Copyright &copy; 2017<br>
+			All rights reserved.</p>
+		</div>
+		<div class="footer_column">
+		  <h4>Information</h4>
+          <ul>
+            <li><a href="https://www.maine.gov">Maine.gov</a></li>
+            <li><a href="https://www.maine.gov/portal/policies/index.html">Site Policies</a></li>
+            <li><a href="https://www.maine.gov/portal/policies/accessibility.html">Accessibility</a></li>
+            <li><a href="https://maine.gov/portal/free-viewers.html">Document Viewers</a></li>
+
+          </ul>
+		</div>
+		<div class="footer_column">
+        <h4>&nbsp;</h4>
+        	<ul>
+            <li><a href="https://www.maine.gov/dafs/">DAFS</a></li>
+            <li><a href="https://www.maine.gov/oit/">Office of Information Technology</a></li>
+            <li><a href="sitemap.html">Sitemap</a></li> 
+            </ul>       
+		  <!--<h4>Connect with Us</h4>
+		  <ul class="social-media">
+			<li class="facebook"><a href="#">Facebook</a></li>
+		</ul>-->
+		</div>
+		<div class="footer_column">
+		  <h4>Contact Information</h4>
+		  <p>GeoLibrary<br>
+			Augusta, ME 04333<br>
+			<a href="mailto:GeolibraryBoard.OIT@maine.gov">GeolibraryBoard.OIT@maine.gov</a></p>
+		</div>
+		<!-- end footer_column --> 
+	</div>
+  </footer>
+</div><!-- end container id --> 
+
+<script type="text/javascript">
+  if($(window).width() <= 651){
+$('.sf-menu a').on('click touchend', function() {
+var el = $(this);
+var link = el.attr('href');
+window.location = link;
+});
+}
+</script>
+   <!-- Automatic GA insert w11 -->  
+  <script type="text/javascript">
+  
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31309917-1']);
+  _gaq.push(['_setDomainName', 'maine.gov']);
+  _gaq.push(['_trackPageview']);
+  
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+  </script>
+</body>
+<!-- InstanceEnd --></html>
